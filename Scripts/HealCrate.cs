@@ -8,6 +8,8 @@ public class HealCrate : MonoBehaviour
     public HealCrateData healData;
     private Rigidbody2D rb2d;
 
+    public UnityEvent OnDead = new UnityEvent();
+
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
@@ -29,6 +31,7 @@ public class HealCrate : MonoBehaviour
         if (damagable != null)
         {
             damagable.Heal(healData.heal);
+            OnDead?.Invoke();
             gameObject.SetActive(false);
         }
     }

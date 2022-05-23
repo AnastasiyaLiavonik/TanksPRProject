@@ -8,6 +8,7 @@ public class InstantiateUtil : MonoBehaviour
 
     public void InstantiateObject()
     {
+        Debug.Log(objectToinstantiate.name);
         Instantiate(objectToinstantiate);
     }
 }
