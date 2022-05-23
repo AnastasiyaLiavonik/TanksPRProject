@@ -226,7 +226,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 55062133}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.4424348, y: -1.4715887, z: -10}
+  m_LocalPosition: {x: -1.5023856, y: -1.4692727, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6476,11 +6476,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4479061414674426564, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.61
+      value: -2.62
       objectReference: {fileID: 0}
     - target: {fileID: 4479061414674426564, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.8
+      value: -2.7
       objectReference: {fileID: 0}
     - target: {fileID: 4479061414674426564, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6519,10 +6519,15 @@ PrefabInstance:
       value: crateHeal
       objectReference: {fileID: 0}
     - target: {fileID: 7740116839441416328, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7740116839441416328, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -8431616444307654349, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
 --- !u!1 &1226664614
 GameObject:
@@ -6855,7 +6860,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.8578725, y: 1}
+    m_SensorSize: {x: 2.1264591, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
