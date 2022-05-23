@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3438797459855858461
+--- !u!1 &1373566643583948786
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,24 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4501655685364797828}
-  - component: {fileID: 6672055791522266712}
-  - component: {fileID: 1870562478694409570}
+  - component: {fileID: 4231544432566896748}
+  - component: {fileID: 7822010804990652278}
+  - component: {fileID: 2004370840782828337}
   m_Layer: 0
-  m_Name: ImpactSound
+  m_Name: CrateBreakSound
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4501655685364797828
+--- !u!4 &4231544432566896748
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3438797459855858461}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_GameObject: {fileID: 1373566643583948786}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -33,25 +33,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &6672055791522266712
+--- !u!82 &7822010804990652278
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3438797459855858461}
+  m_GameObject: {fileID: 1373566643583948786}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 72cc8542c39ef8942a66af35d42cb8dc, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 30755600b605be446b278d0fb1a77ce8, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.136
+  m_Volume: 0.719
   m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 125
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -129,13 +129,13 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1870562478694409570
+--- !u!114 &2004370840782828337
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3438797459855858461}
+  m_GameObject: {fileID: 1373566643583948786}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e975a2e98c2f6764e9cd0fa7f533ec2c, type: 3}

@@ -226,7 +226,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 55062133}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.4424348, y: -1.4715887, z: -10}
+  m_LocalPosition: {x: -1.5023856, y: -1.4692727, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1103,9 +1103,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 3b5d3595af6c38844918ed831c45a60a, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 9562577ea9092464da07828f040a2826, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.05
+  m_Volume: 0.518
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -6476,11 +6476,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4479061414674426564, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.61
+      value: -2.62
       objectReference: {fileID: 0}
     - target: {fileID: 4479061414674426564, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.8
+      value: -2.7
       objectReference: {fileID: 0}
     - target: {fileID: 4479061414674426564, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6516,13 +6516,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7740116839441416328, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
       propertyPath: m_Name
-      value: crateHeal
+      value: CrateHeal
+      objectReference: {fileID: 0}
+    - target: {fileID: 7740116839441416328, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7740116839441416328, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -8431616444307654349, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 83d203c61f9dd4f4cbf4c5ff9add3dc2, type: 3}
 --- !u!1 &1226664614
 GameObject:
@@ -6855,7 +6860,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.8578725, y: 1}
+    m_SensorSize: {x: 2.1264591, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -13522,27 +13527,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7504106024007465281, guid: 92f056016b2bf05499a0995a6e960461, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7504106024007465281, guid: 92f056016b2bf05499a0995a6e960461, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7504106024007465281, guid: 92f056016b2bf05499a0995a6e960461, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 389.5537
       objectReference: {fileID: 0}
     - target: {fileID: 7504106024007465281, guid: 92f056016b2bf05499a0995a6e960461, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 53.1091
       objectReference: {fileID: 0}
     - target: {fileID: 7504106024007465281, guid: 92f056016b2bf05499a0995a6e960461, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 199.77686
       objectReference: {fileID: 0}
     - target: {fileID: 7504106024007465281, guid: 92f056016b2bf05499a0995a6e960461, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -31.55455
       objectReference: {fileID: 0}
     - target: {fileID: 8479140688826298468, guid: 92f056016b2bf05499a0995a6e960461, type: 3}
       propertyPath: m_AnchorMax.x
