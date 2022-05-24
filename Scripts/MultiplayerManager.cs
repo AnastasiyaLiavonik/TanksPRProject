@@ -18,6 +18,8 @@ public class MultiplayerManager : MonoBehaviour
     private bool winFlag = false;
     private bool defeatFlag = false;
     public static Hashtable clientsList = new Hashtable();
+    private float _timer;
+    private float _hudRefreshRate = 1f;
 
 
     private void Awake() 
@@ -109,6 +111,8 @@ public class MultiplayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Application.targetFrameRate != 60)
+            Application.targetFrameRate = 60;
         if (SceneManager.GetActiveScene().buildIndex == 3)
         {
             if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && winScreen != null && GameObject.FindGameObjectsWithTag("Player").Length != 0)
@@ -133,7 +137,15 @@ public class MultiplayerManager : MonoBehaviour
                 Invoke("back", 2.0f);
             }
         }
-        
+        else if (SceneManager.GetActiveScene().buildIndex == 7)
+        {
+            if (Time.unscaledTime > _timer)
+            {
+                int fps = (int)(1f / Time.smoothDeltaTime);
+                GameObject.Find("ConnectionStatus").GetComponent<TextMeshProUGUI>().text = "FPS: " + fps;
+                _timer = Time.unscaledTime + _hudRefreshRate;
+            }
+        }
     }
 
     private void back()

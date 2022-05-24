@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.sceneLoaded += Initialize;
         DontDestroyOnLoad(gameObject);
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
     }
 
     private void Initialize(Scene scene, LoadSceneMode sceneMode)
@@ -54,8 +56,14 @@ public class GameManager : MonoBehaviour
 
     public void Multiplayer()
     {
-        Debug.Log("aaa");
         mpm = FindObjectOfType<MultiplayerManager>();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+4);
     }
+
+    void Update()
+    {
+        if (Application.targetFrameRate != 60)
+            Application.targetFrameRate = 60;
+    }
+
 }
