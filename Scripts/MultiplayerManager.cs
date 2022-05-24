@@ -17,27 +17,31 @@ public class MultiplayerManager : MonoBehaviour
     private int playersNumber;
     private bool winFlag = false;
     private bool defeatFlag = false;
+    public static Hashtable clientsList = new Hashtable();
+
 
     private void Awake() 
     {
-        //DontDestroyOnLoad(gameObject);
     }
 
     public void Start()
     {
         Debug.Log("Multiplayer launched");
         SceneManager.sceneLoaded += OnSceneLoaded;
-        if (defeatScreen == null && !defeatFlag)
+        if (SceneManager.GetActiveScene().buildIndex == 3)
         {
-            defeatFlag = true;
-            defeatScreen = GameObject.FindGameObjectsWithTag("Defeat")[0];
-            defeatScreen.SetActive(false);
-        }
-        if (winScreen == null && !winFlag)
-        {
-            winFlag = true;
-            winScreen = GameObject.FindGameObjectsWithTag("Win")[0];
-            winScreen.SetActive(false);
+            if (defeatScreen == null && !defeatFlag)
+            {
+                defeatFlag = true;
+                defeatScreen = GameObject.FindGameObjectsWithTag("Defeat")[0];
+                defeatScreen.SetActive(false);
+            }
+            if (winScreen == null && !winFlag)
+            {
+                winFlag = true;
+                winScreen = GameObject.FindGameObjectsWithTag("Win")[0];
+                winScreen.SetActive(false);
+            }
         }
     }
 
@@ -73,8 +77,6 @@ public class MultiplayerManager : MonoBehaviour
             TextMeshProUGUI mText = GameObject.Find("TextIP").GetComponent<TextMeshProUGUI>();
             mText.text = GetIPAddress();
         }
-        Debug.Log("OnSceneLoaded: " + scene.name);
-        Debug.Log(mode);
     }
 
     public void StartBtn()
@@ -106,6 +108,9 @@ public class MultiplayerManager : MonoBehaviour
                     go.SetActive(false);
                 }
                 winScreen.SetActive(true);
+                winFlag = true;
+                Invoke("back", 2.0f);
+                
             }
             else if(GameObject.FindGameObjectsWithTag("Player").Length == 0 && defeatScreen != null && GameObject.FindGameObjectsWithTag("Enemy").Length != 0)
             {
@@ -114,9 +119,16 @@ public class MultiplayerManager : MonoBehaviour
                     go.SetActive(false);
                 }
                 defeatScreen.SetActive(true);
+                defeatFlag = true;
+                Invoke("back", 2.0f);
             }
         }
         
+    }
+
+    private void back()
+    {
+        SceneManager.LoadScene(0);
     }
 
     static string GetIPAddress()

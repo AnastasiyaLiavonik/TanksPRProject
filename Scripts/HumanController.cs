@@ -7,6 +7,10 @@ public class HumanController : MonoBehaviour
 {
     [SerializeField]
     private Camera mainCamera;
+
+    [SerializeField]
+    private MultiplayerManager multiplayerManager;
+
     public UnityEvent OnShoot = new UnityEvent();
     public UnityEvent<Vector2> OnMoveBody = new UnityEvent<Vector2>();
     public UnityEvent<Vector2> OnMoveTurret = new UnityEvent<Vector2>();
