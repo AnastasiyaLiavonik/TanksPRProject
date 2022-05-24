@@ -1126,6 +1126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5a45708afb610a46957931a3c908db5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playersNumber: 0
 --- !u!4 &1833381901
 Transform:
   m_ObjectHideFlags: 0
@@ -1186,5 +1187,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  saveSystem: {fileID: 0}
-  mpm: {fileID: 0}
+  saveSystem: {fileID: 1563854227}
+  mpm: {fileID: 1833381900}
