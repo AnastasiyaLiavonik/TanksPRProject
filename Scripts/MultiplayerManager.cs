@@ -28,21 +28,6 @@ public class MultiplayerManager : MonoBehaviour
     {
         Debug.Log("Multiplayer launched");
         SceneManager.sceneLoaded += OnSceneLoaded;
-        if (SceneManager.GetActiveScene().buildIndex == 3)
-        {
-            if (defeatScreen == null && !defeatFlag)
-            {
-                defeatFlag = true;
-                defeatScreen = GameObject.FindGameObjectsWithTag("Defeat")[0];
-                defeatScreen.SetActive(false);
-            }
-            if (winScreen == null && !winFlag)
-            {
-                winFlag = true;
-                winScreen = GameObject.FindGameObjectsWithTag("Win")[0];
-                winScreen.SetActive(false);
-            }
-        }
     }
 
     public void StartNewSession()
@@ -77,16 +62,41 @@ public class MultiplayerManager : MonoBehaviour
             TextMeshProUGUI mText = GameObject.Find("TextIP").GetComponent<TextMeshProUGUI>();
             mText.text = GetIPAddress();
         }
+        else if (scene.buildIndex == 3)
+        {
+            if (defeatScreen == null && !defeatFlag)
+            {
+                defeatFlag = true;
+                defeatScreen = GameObject.FindGameObjectsWithTag("Defeat")[0];
+                defeatScreen.SetActive(false);
+            }
+            if (winScreen == null && !winFlag)
+            {
+                winFlag = true;
+                winScreen = GameObject.FindGameObjectsWithTag("Win")[0];
+                winScreen.SetActive(false);
+            }
+        }
     }
 
     public void StartBtn()
     {
-        SceneManager.LoadScene(3);
+        //SceneManager.LoadScene(3);
     }
 
     public void ConnectBtn()
     {
-        SceneManager.LoadScene(3);
+        TextMeshProUGUI connectionStatus = GameObject.Find("ConnectionStatus").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI IPAddressInputText = GameObject.Find("IPAddressInputText").GetComponent<TextMeshProUGUI>();
+        if(!Regex.IsMatch(IPAddressInputText.text, "(?:[0-9]{1,3}\\.){3}[0-9]{1,3}"))
+        {
+            connectionStatus.text = "Entered IP address is incorrect.";
+            return;
+        }
+        connectionStatus.text = "Connection...";
+        //try to connect
+
+        //SceneManager.LoadScene(3);
     }
 
     public void ConnectToSession()

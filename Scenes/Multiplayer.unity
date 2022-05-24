@@ -5955,6 +5955,10 @@ PrefabInstance:
       value: HumanControlledDark
       objectReference: {fileID: 0}
     - target: {fileID: 6665210948737905066, guid: 7936bb972849cc84e99fb63972823b65, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6665210948737905066, guid: 7936bb972849cc84e99fb63972823b65, type: 3}
       propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
@@ -6107,6 +6111,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerControlledGreen
       objectReference: {fileID: 0}
+    - target: {fileID: 6665210948737905066, guid: 5af55beac385331459e8a169ed83acb3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6929940807726661552, guid: 5af55beac385331459e8a169ed83acb3, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -6187,6 +6195,10 @@ PrefabInstance:
     - target: {fileID: 6665210948737905066, guid: 6a8e168308b1f0d4c8ef38c9ba65c370, type: 3}
       propertyPath: m_Name
       value: HumanControlledRed
+      objectReference: {fileID: 0}
+    - target: {fileID: 6665210948737905066, guid: 6a8e168308b1f0d4c8ef38c9ba65c370, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6665210948737905066, guid: 6a8e168308b1f0d4c8ef38c9ba65c370, type: 3}
       propertyPath: m_TagString
@@ -7124,6 +7136,10 @@ PrefabInstance:
     - target: {fileID: 6665210948737905066, guid: 4ce9ae1437d12f944b8169cd5d870a70, type: 3}
       propertyPath: m_Name
       value: PlayerControlledDark
+      objectReference: {fileID: 0}
+    - target: {fileID: 6665210948737905066, guid: 4ce9ae1437d12f944b8169cd5d870a70, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7568736404840676234, guid: 4ce9ae1437d12f944b8169cd5d870a70, type: 3}
       propertyPath: m_AnchorMax.y
@@ -13916,6 +13932,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerControlledRed
       objectReference: {fileID: 0}
+    - target: {fileID: 6665210948737905066, guid: 7be9a270f913c8d4daec8e33e5226267, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8430096333539111058, guid: 7be9a270f913c8d4daec8e33e5226267, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -14004,6 +14024,10 @@ PrefabInstance:
     - target: {fileID: 6665210948737905066, guid: 783985f1ee26df9408b875bf2fbbfde2, type: 3}
       propertyPath: m_Name
       value: HumanControlledGreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 6665210948737905066, guid: 783985f1ee26df9408b875bf2fbbfde2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6665210948737905066, guid: 783985f1ee26df9408b875bf2fbbfde2, type: 3}
       propertyPath: m_TagString
