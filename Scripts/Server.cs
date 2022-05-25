@@ -20,6 +20,7 @@ public class Server : MonoBehaviour
     public static MultiplayerManager multiplayerManager;
     public static TextMeshProUGUI pText;
     public static Button butt;
+    public static bool flag = false;
     public static string[] tanks = { "light", "dark", "red", "green"};
 
     void Awake()
@@ -43,6 +44,7 @@ public class Server : MonoBehaviour
         butt = GameObject.Find("StartBtn").GetComponent<Button>();
         butt.interactable = false;
         mText.text = GetIPAddress();
+        StartCoroutine(Example());
     }
 
     void Start()
@@ -50,8 +52,8 @@ public class Server : MonoBehaviour
         pText = GameObject.Find("TextPlayers").GetComponent<TextMeshProUGUI>();
         Thread start = new Thread(StartServer);
         Task.Delay(300).ContinueWith(t => start.Start());
-        Client hostingClient = FindObjectsOfType<Client>()[0];
-        Task.Delay(300).ContinueWith(t => Client.Connect(GetIPAddress()));
+        Client client = new Client();
+        Task.Delay(300).ContinueWith(t => client.Connecta(GetIPAddress()));
     }
 
     public void StartBtn()
@@ -68,7 +70,7 @@ public class Server : MonoBehaviour
     {
         Debug.Log("Server Started ....");
         IPAddress localAddr = IPAddress.Parse(GetIPAddress());
-        TcpListener serverSocket = new TcpListener(localAddr, 888);
+        TcpListener serverSocket = new TcpListener(localAddr, 777);
         int counter = 0;
 
         serverSocket.Start();
@@ -80,11 +82,18 @@ public class Server : MonoBehaviour
             clientsList.Add(tanks[counter - 1], client.startClient(serverSocket, counter));
             broadcast("Deus Vult" ,"", false);
         }
-        pText.text = "All " + counter.ToString() + " players are connected. We are ready to begin!";
-        butt.interactable = true;
+        flag = true;
         //clientSocket.Close();
         //serverSocket.Stop();
     }
+
+    IEnumerator Example()
+    {
+        yield return new WaitUntil(() => flag);
+        pText.text = "All " + multiplayerManager.playersNumber.ToString() + " players are connected. We are ready to begin!";
+        butt.interactable = true;
+    }
+
 
 
     static string GetIPAddress()
@@ -98,13 +107,13 @@ public class Server : MonoBehaviour
         IPAddress[] address = ipHostEntry.AddressList;
         sb.Append("The Local IP Address: " + address[1].ToString());
         sb.AppendLine();
-        foreach (var item in address)
+        /*foreach (var item in address)
         {
             if (Regex.IsMatch(item.ToString(), "(?:[0-9]{1,3}\\.){3}[0-9]{1,3}"))
             {
                 return item.ToString();
             }
-        }
+        }*/
 
         return address[1].ToString();
     }

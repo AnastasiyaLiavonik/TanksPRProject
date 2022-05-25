@@ -10,44 +10,26 @@ using System.Collections.Concurrent;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Threading.Tasks;
 
-public class Client : MonoBehaviour
+public class Client : ScriptableObject
 {
-    private static TcpClient clientSocket = new TcpClient();
+    private static TcpClient clientSocket;
     private static NetworkStream serverStream = default(NetworkStream);
     [SerializeField]
     public Server server;
     public static bool res = false;
+    public static bool flag = false;
 
-    void Start()
+    public Client()
     {
-        Debug.Log("Host client started");
+        
     }
 
-    void Update()
+    public void Connecta(string IP)
     {
-
-    }
-
-    public void ConnectBtn()
-    {
-        TextMeshProUGUI connectionStatus = GameObject.Find("ConnectionStatus").GetComponent<TextMeshProUGUI>();
-        TextMeshProUGUI IPAddressInputText = GameObject.Find("IPAddressInputText").GetComponent<TextMeshProUGUI>();
-        if (!Regex.IsMatch(IPAddressInputText.text, "(?:[0-9]{1,3}\\.){3}[0-9]{1,3}"))
-        {
-            connectionStatus.text = "Entered IP address is incorrect.";
-            return;
-        }
-        connectionStatus.text = "Connection...";
-
-        Connect(IPAddressInputText.text);
-
-        //SceneManager.LoadScene(3);
-    }
-
-    public static void Connect(string IP)
-    {
-        clientSocket.Connect(IP, 888);
+        clientSocket = new TcpClient();
+        clientSocket.Connect(IP, 777);
         serverStream = clientSocket.GetStream();
         byte[] outStream = Encoding.ASCII.GetBytes("Ave Maria$");
         serverStream.Write(outStream, 0, outStream.Length);
