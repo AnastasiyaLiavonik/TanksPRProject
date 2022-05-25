@@ -13,15 +13,15 @@ using UnityEngine.SceneManagement;
 
 public class Client : MonoBehaviour
 {
-    private TcpClient clientSocket = new TcpClient();
-    private NetworkStream serverStream = default(NetworkStream);
+    private static TcpClient clientSocket = new TcpClient();
+    private static NetworkStream serverStream = default(NetworkStream);
     [SerializeField]
     public Server server;
-    public bool res = false;
+    public static bool res = false;
 
     void Start()
     {
-        
+        Debug.Log("Host client started");
     }
 
     void Update()
@@ -40,18 +40,23 @@ public class Client : MonoBehaviour
         }
         connectionStatus.text = "Connection...";
 
-        clientSocket.Connect(IPAddressInputText.text, 8888);
-        serverStream = clientSocket.GetStream();
-        byte[] outStream = Encoding.ASCII.GetBytes("Ave Maria");
-        serverStream.Write(outStream, 0, outStream.Length);
-
-        Thread ctThread = new Thread(getMessage);
-        ctThread.Start();
+        Connect(IPAddressInputText.text);
 
         //SceneManager.LoadScene(3);
     }
 
-    private void getMessage()
+    public static void Connect(string IP)
+    {
+        clientSocket.Connect(IP, 888);
+        serverStream = clientSocket.GetStream();
+        byte[] outStream = Encoding.ASCII.GetBytes("Ave Maria$");
+        serverStream.Write(outStream, 0, outStream.Length);
+
+        Thread ctThread = new Thread(getMessage);
+        ctThread.Start();
+    }
+
+    private static void getMessage()
     {
         while (true)
         {

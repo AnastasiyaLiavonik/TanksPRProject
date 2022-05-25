@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Threading.Tasks;
 
 public class Server : MonoBehaviour
 {
@@ -47,7 +48,10 @@ public class Server : MonoBehaviour
     void Start()
     {
         pText = GameObject.Find("TextPlayers").GetComponent<TextMeshProUGUI>();
-        Invoke("StartServer", 0.3f); 
+        Thread start = new Thread(StartServer);
+        Task.Delay(300).ContinueWith(t => start.Start());
+        Client hostingClient = FindObjectsOfType<Client>()[0];
+        Task.Delay(300).ContinueWith(t => Client.Connect(GetIPAddress()));
     }
 
     public void StartBtn()
@@ -64,7 +68,7 @@ public class Server : MonoBehaviour
     {
         Debug.Log("Server Started ....");
         IPAddress localAddr = IPAddress.Parse(GetIPAddress());
-        TcpListener serverSocket = new TcpListener(localAddr, 8888);
+        TcpListener serverSocket = new TcpListener(localAddr, 888);
         int counter = 0;
 
         serverSocket.Start();
