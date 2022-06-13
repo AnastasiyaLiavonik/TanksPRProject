@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Cinemachine;
 
 public class Client : MonoBehaviour
 {
@@ -105,7 +106,6 @@ public class Client : MonoBehaviour
 
         if (SceneManager.GetActiveScene().buildIndex == 3)
         {
-            Debug.Log($"In tank deleting:   {id}");
             var enemyTanks = GameObject.FindGameObjectsWithTag("Enemy");
             foreach (var enemy in enemyTanks)
             {
@@ -115,7 +115,6 @@ public class Client : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log(enemy.name);
                     tanksStatesInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == enemyTanksDict.FirstOrDefault(x => x.Value == enemy.name).Key).Key, new State());
                     tanksControllersInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == enemyTanksDict.FirstOrDefault(x => x.Value == enemy.name).Key).Key, enemy.GetComponent<HumanController>());
                 }
@@ -130,13 +129,15 @@ public class Client : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log(player.name);
                     tanksStatesInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == playerTanksDict.FirstOrDefault(x => x.Value == player.name).Key).Key, new State());
                     tanksControllersInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == playerTanksDict.FirstOrDefault(x => x.Value == player.name).Key).Key, player.transform.GetChild(0).gameObject.GetComponent<HumanController>());
                     mutex.WaitOne();
                     playerInput = player.GetComponent<PlayerInput>();
                     mutex.ReleaseMutex();
-                    Debug.Log(playerInput);
+                    var cin = GameObject.Find("PlayerCinemachine").GetComponent<CinemachineVirtualCamera>();
+                    cin.Follow = player.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform;
+
+
                 }
             }
             deletedUnnecessary = true;
@@ -221,9 +222,11 @@ public class Client : MonoBehaviour
     {
         foreach(var tank in tanksControllersInMatch)
         {
+            mutex.WaitOne();
             tank.Value.GetBodyMovement(tanksStatesInMatch[tank.Key].movementVector);
             tank.Value.GetShootingInput(tanksStatesInMatch[tank.Key].shoot);
             tank.Value.GetTurretMovement(tanksStatesInMatch[tank.Key].mousePosition);
+            mutex.ReleaseMutex();
         }
     }
 }
