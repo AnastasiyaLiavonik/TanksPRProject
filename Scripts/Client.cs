@@ -36,6 +36,7 @@ public class Client : MonoBehaviour
     private State currentState;
     public ulong mesID = 0;
     public long startTime = 0;
+    public bool deletedUnnecessary = false;
 
     public Client()
     {
@@ -79,7 +80,8 @@ public class Client : MonoBehaviour
 
     IEnumerator Playback()
     {
-        do
+        yield return new WaitUntil(() => deletedUnnecessary);
+        while (gameContinues)
         {
             currentState.mousePosition = playerInput.GetMousePositon();
             currentState.movementVector = playerInput.GetBodyMovement();
@@ -91,7 +93,7 @@ public class Client : MonoBehaviour
             SendMessageToServer("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
             //Debug.Log("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
             yield return new WaitForSeconds(1f / 30f);
-        } while (gameContinues);
+        } 
     }
 
     IEnumerator Example()
@@ -138,6 +140,7 @@ public class Client : MonoBehaviour
                     playerInput = player.gameObject.GetComponent<PlayerInput>();
                 }
             }
+            deletedUnnecessary = true;
         }
     }
 
