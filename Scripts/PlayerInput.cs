@@ -55,7 +55,7 @@ public class PlayerInput : MonoBehaviour
             currentState.mes_id = mesID;
             currentState.shoot = GetShootingInput();
             client.SendMessageToServer("c:"+JsonConvert.SerializeObject(currentState)+"&\0");
-            Debug.Log("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
+            //Debug.Log("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
             yield return new WaitForSeconds(1f / 30f);  
         } while (close);
     }

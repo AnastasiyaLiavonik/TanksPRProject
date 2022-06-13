@@ -123,7 +123,7 @@ public class Client : MonoBehaviour
 
     public void SendMessageToServer(string msg)
     {
-        if(DateTimeOffset.UtcNow.ToUnixTimeSeconds() == startTime || msg.Contains("Ave"))
+        if(DateTimeOffset.UtcNow.ToUnixTimeSeconds() >= startTime || msg.Contains("Ave"))
         {
             byte[] outStream = Encoding.ASCII.GetBytes(msg);
             serverStream.Write(outStream, 0, outStream.Length);
@@ -141,6 +141,7 @@ public class Client : MonoBehaviour
             buffSize = clientSocket.ReceiveBufferSize;
             serverStream.Read(inStream, 0, buffSize);
             string returnData = System.Text.Encoding.ASCII.GetString(inStream);
+            Debug.Log($"'{returnData}'");
             if (!isConnected && !returnData.Contains("Deus Vult"))
             {
                 Debug.Log("Disconnected because Server is not Crusader!");
@@ -159,7 +160,6 @@ public class Client : MonoBehaviour
             }
             else if(isConnected)
             {
-                Debug.Log($"'{returnData}'");
                 Debug.Log(id);
                 char type = returnData[0];
                 switch (type)
