@@ -137,7 +137,8 @@ public class Client : MonoBehaviour
                     Debug.Log(player.name);
                     tanksStatesInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == playerTanksDict.FirstOrDefault(x => x.Value == player.name).Key).Key, new State());
                     tanksControllersInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == playerTanksDict.FirstOrDefault(x => x.Value == player.name).Key).Key, player.transform.GetChild(0).gameObject.GetComponent<HumanController>());
-                    playerInput = player.gameObject.GetComponent<PlayerInput>();
+                    playerInput = player.GetComponent<PlayerInput>();
+                    Debug.Log(playerInput);
                 }
             }
             deletedUnnecessary = true;
