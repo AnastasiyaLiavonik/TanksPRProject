@@ -17,9 +17,16 @@ public class PlayerInput : MonoBehaviour
     public UnityEvent<Vector2> OnMoveBody = new UnityEvent<Vector2>();
     public UnityEvent<Vector2> OnMoveTurret = new UnityEvent<Vector2>();
 
+    private void Awake()
+    {
+        if (mainCamera == null)
+            mainCamera = Camera.main;
+    }
+
     private void Start()
     {
     }
+
 
     public bool GetShootingInput()
     {
