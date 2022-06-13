@@ -52,6 +52,7 @@ public class PlayerInput : MonoBehaviour
             currentState.movementVector = GetBodyMovement();
             mesID++;
             currentState.player_id = client.id;
+            Debug.Log(client.id);
             currentState.mes_id = mesID;
             currentState.shoot = GetShootingInput();
             client.SendMessageToServer("c:"+JsonConvert.SerializeObject(currentState)+"&\0");
@@ -60,7 +61,7 @@ public class PlayerInput : MonoBehaviour
         } while (close);
     }
 
-    private bool GetShootingInput()
+    public bool GetShootingInput()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -69,12 +70,7 @@ public class PlayerInput : MonoBehaviour
         return false;
     }
 
-    private void GetTurretMovement()
-    {
-        OnMoveTurret?.Invoke(GetMousePositon());
-    }
-
-    private Vector2 GetMousePositon()
+    public Vector2 GetMousePositon()
     {
         Vector3 mousePosition = Input.mousePosition;
         mousePosition.z = mainCamera.nearClipPlane;
@@ -82,7 +78,7 @@ public class PlayerInput : MonoBehaviour
         return mouseWorldPosition;
     }
 
-    private Vector2 GetBodyMovement()
+    public Vector2 GetBodyMovement()
     {
         Vector2 movementVector = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         return movementVector;

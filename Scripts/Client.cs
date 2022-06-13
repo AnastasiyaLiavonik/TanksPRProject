@@ -22,9 +22,10 @@ public class Client : MonoBehaviour
     private static NetworkStream serverStream = default(NetworkStream);
     [SerializeField]
     public Server server;
-    public HumanController humanController;
+    public PlayerInput playerInput;
     public static bool isConnected = false;
     public static bool loadFlag = false;
+    public bool gameContinues = true;
     public int id;
     private Dictionary<string, string> enemyTanksDict = new Dictionary<string, string>();
     private Dictionary<string, string> playerTanksDict = new Dictionary<string, string>();
@@ -32,6 +33,8 @@ public class Client : MonoBehaviour
     private static Dictionary<int, HumanController> tanksControllersInMatch = new Dictionary<int, HumanController>();
     private static Dictionary<int, State> tanksStatesInMatch = new Dictionary<int, State>();
     Mutex mutex = new Mutex();
+    private State currentState;
+    public ulong mesID = 0;
     public long startTime = 0;
 
     public Client()
@@ -49,8 +52,8 @@ public class Client : MonoBehaviour
         playerTanksDict.Add("dark", "PlayerControlledDark");
         playerTanksDict.Add("red", "PlayerControlledRed");
         playerTanksDict.Add("green", "PlayerControlledGreen");
-        int servers = FindObjectsOfType<Client>().Length;
-        if (servers != 1)
+        int clients = FindObjectsOfType<Client>().Length;
+        if (clients != 1)
         {
             Destroy(this.gameObject);
         }
@@ -59,6 +62,7 @@ public class Client : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
         StartCoroutine(Example());
+        StartCoroutine(Playback());
         //SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -73,12 +77,29 @@ public class Client : MonoBehaviour
 
     }
 
+    IEnumerator Playback()
+    {
+        do
+        {
+            currentState.mousePosition = playerInput.GetMousePositon();
+            currentState.movementVector = playerInput.GetBodyMovement();
+            mesID++;
+            currentState.player_id = id;
+            Debug.Log(id);
+            currentState.mes_id = mesID;
+            currentState.shoot = playerInput.GetShootingInput();
+            SendMessageToServer("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
+            //Debug.Log("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
+            yield return new WaitForSeconds(1f / 30f);
+        } while (gameContinues);
+    }
+
     IEnumerator Example()
     {
         yield return new WaitUntil(() => loadFlag);
         SceneManager.LoadSceneAsync(3);
 
-        while (SceneManager.GetActiveScene().buildIndex != 3)
+        while (SceneManager.GetActiveScene().buildIndex != 3 && !SceneManager.GetActiveScene().isLoaded)
         {
             yield return null;
         }
@@ -114,6 +135,7 @@ public class Client : MonoBehaviour
                     Debug.Log(player.name);
                     tanksStatesInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == playerTanksDict.FirstOrDefault(x => x.Value == player.name).Key).Key, new State());
                     tanksControllersInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == playerTanksDict.FirstOrDefault(x => x.Value == player.name).Key).Key, player.transform.GetChild(0).gameObject.GetComponent<HumanController>());
+                    playerInput = player.gameObject.GetComponent<PlayerInput>();
                 }
             }
         }
