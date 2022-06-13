@@ -65,8 +65,8 @@ public class MultiplayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Application.targetFrameRate != 60)
-            Application.targetFrameRate = 60;
+        if (Application.targetFrameRate != 30)
+            Application.targetFrameRate = 30;
         if (SceneManager.GetActiveScene().buildIndex == 3)
         {
             if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && winScreen != null && GameObject.FindGameObjectsWithTag("Player").Length != 0)

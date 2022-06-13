@@ -58,12 +58,22 @@ public class Server : MonoBehaviour
 
     public void StartBtn()
     {
-        SceneManager.LoadScene(3);
+        SendStartingInfo();
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         
+    }
+
+    void SendStartingInfo()
+    {
+        string toSend = "i:";
+        for (int i = 0; i< multiplayerManager.playersNumber; i++)
+        {
+            toSend += $"{i}-{tanks[i]};";
+        }
+        broadcast(toSend, "");
     }
 
     private void StartServer()
@@ -77,10 +87,11 @@ public class Server : MonoBehaviour
 
         while (counter != multiplayerManager.playersNumber)
         {
+            int c = counter;
             counter += 1;
             handleClinet client = new handleClinet();
             clientsList.Add(tanks[counter - 1], client.startClient(serverSocket, counter));
-            broadcast("Deus Vult" ,"", false);
+            sendMessageToTank(tanks[c], "Deus Vult:"+c.ToString());
         }
         flag = true;
         //clientSocket.Close();
@@ -92,6 +103,7 @@ public class Server : MonoBehaviour
         yield return new WaitUntil(() => flag);
         pText.text = "All " + multiplayerManager.playersNumber.ToString() + " players are connected. We are ready to begin!";
         butt.interactable = true;
+        broadcast((DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3).ToString(), "");
     }
 
 
@@ -107,18 +119,20 @@ public class Server : MonoBehaviour
         IPAddress[] address = ipHostEntry.AddressList;
         sb.Append("The Local IP Address: " + address[1].ToString());
         sb.AppendLine();
-        /*foreach (var item in address)
-        {
-            if (Regex.IsMatch(item.ToString(), "(?:[0-9]{1,3}\\.){3}[0-9]{1,3}"))
-            {
-                return item.ToString();
-            }
-        }*/
 
         return address[1].ToString();
     }
 
-    public static void broadcast(string msg, string uName, bool flag)
+    public static void sendMessageToTank(string tankName, string msg)
+    {
+        TcpClient client = (TcpClient)clientsList[tankName];
+        NetworkStream broadcastStream = client.GetStream();
+        Byte[] broadcastBytes = broadcastBytes = Encoding.ASCII.GetBytes(msg);
+        broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+        broadcastStream.Flush();
+    }
+
+    public static void broadcast(string msg, string uName)
     {
         foreach (DictionaryEntry Item in clientsList)
         {
@@ -126,16 +140,7 @@ public class Server : MonoBehaviour
             broadcastSocket = (TcpClient)Item.Value;
             NetworkStream broadcastStream = broadcastSocket.GetStream();
             Byte[] broadcastBytes = null;
-
-            if (flag == true)
-            {
-                broadcastBytes = Encoding.ASCII.GetBytes(uName + " says : " + msg);
-            }
-            else
-            {
-                broadcastBytes = Encoding.ASCII.GetBytes(msg);
-            }
-
+            broadcastBytes = Encoding.ASCII.GetBytes(msg);
             broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
             broadcastStream.Flush();
         }
@@ -158,6 +163,7 @@ public class Server : MonoBehaviour
             networkStream.Read(bytesFrom, 0, bytesFrom.Length);
             dataFromClient = System.Text.Encoding.ASCII.GetString(bytesFrom);
             dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("$"));
+            Debug.Log(dataFromClient);
             if (dataFromClient != "Ave Maria")
             {
                 this.clientSocket.Close();
@@ -171,14 +177,8 @@ public class Server : MonoBehaviour
 
         private void doChat()
         {
-            int requestCount = 0;
             byte[] bytesFrom = new byte[10025];
             string dataFromClient = null;
-            Byte[] sendBytes = null;
-            string serverResponse = null;
-            string rCount = null;
-            requestCount = 0;
-            requestCount = requestCount + 1;
             NetworkStream networkStream = clientSocket.GetStream();
             while ((true))
             {
@@ -186,14 +186,7 @@ public class Server : MonoBehaviour
                 {
                     networkStream.Read(bytesFrom, 0, bytesFrom.Length);
                     dataFromClient = System.Text.Encoding.ASCII.GetString(bytesFrom);
-                    dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("$"));
-                    if (dataFromClient != "Ave Maria")
-                    {
-                        chat.Add("From client - " + clNo + " : " + dataFromClient);
-                    }
-                    rCount = Convert.ToString(requestCount);
-
-                    Server.broadcast(dataFromClient, clNo, true);
+                    broadcast(dataFromClient, "");
                 }
                 catch (Exception ex)
                 {

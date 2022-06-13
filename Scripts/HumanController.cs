@@ -23,37 +23,21 @@ public class HumanController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+
+    public void GetShootingInput(bool shoot)
     {
-        GetBodyMovement();
-        GetTurretMovement();
-        GetShootingInput();
+        if(shoot) OnShoot?.Invoke();
     }
 
-    private void GetShootingInput()
+    public void GetTurretMovement(Vector2 mousePosition)
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            OnShoot?.Invoke();
-        }
+        OnMoveTurret?.Invoke(mousePosition);
+
     }
 
-    private void GetTurretMovement()
-    {
-        OnMoveTurret?.Invoke(GetMousePositon());
-    }
 
-    private Vector2 GetMousePositon()
+    public void GetBodyMovement(Vector2 movementVector)
     {
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = mainCamera.nearClipPlane;
-        Vector2 mouseWorldPosition = mainCamera.ScreenToWorldPoint(mousePosition);
-        return mouseWorldPosition;
-    }
-
-    private void GetBodyMovement()
-    {
-        Vector2 movementVector = new Vector2(-1, -1);
-        //OnMoveBody?.Invoke(movementVector.normalized);
+        OnMoveBody?.Invoke(movementVector.normalized);
     }
 }

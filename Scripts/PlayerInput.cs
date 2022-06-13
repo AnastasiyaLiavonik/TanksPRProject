@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Newtonsoft.Json;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -15,27 +16,57 @@ public class PlayerInput : MonoBehaviour
     public UnityEvent OnShoot = new UnityEvent();
     public UnityEvent<Vector2> OnMoveBody = new UnityEvent<Vector2>();
     public UnityEvent<Vector2> OnMoveTurret = new UnityEvent<Vector2>();
+    private Client client;
+    private State currentState;
+    private bool close = true;
+    private ulong mesID = 0;
 
     private void Awake()
     {
         if (mainCamera == null)
             mainCamera = Camera.main;
+
+        client  = GameObject.FindObjectOfType<Client>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        GetBodyMovement();
-        GetTurretMovement();
-        GetShootingInput();
+        if (Application.targetFrameRate != 30)
+            Application.targetFrameRate = 30;
+        currentState = new State();
+        currentState.shoot = false;
+        currentState.hp = 50;
+        currentState.player_id = client.id;
+        Debug.Log(client.id);
+        currentState.mes_id = mesID;
+        currentState.mousePosition = GetMousePositon();
+        currentState.movementVector = GetBodyMovement();
+        StartCoroutine(Playback());
     }
 
-    private void GetShootingInput()
+    IEnumerator Playback()
+    {
+        do
+        {
+            currentState.mousePosition = GetMousePositon();
+            currentState.movementVector = GetBodyMovement();
+            mesID++;
+            currentState.player_id = client.id;
+            currentState.mes_id = mesID;
+            currentState.shoot = GetShootingInput();
+            client.SendMessageToServer("c:"+JsonConvert.SerializeObject(currentState)+"&\0");
+            Debug.Log("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
+            yield return new WaitForSeconds(1f / 30f);  
+        } while (close);
+    }
+
+    private bool GetShootingInput()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            OnShoot?.Invoke();
+            return true;
         }
+        return false;
     }
 
     private void GetTurretMovement()
@@ -51,9 +82,9 @@ public class PlayerInput : MonoBehaviour
         return mouseWorldPosition;
     }
 
-    private void GetBodyMovement()
+    private Vector2 GetBodyMovement()
     {
         Vector2 movementVector = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        OnMoveBody?.Invoke(movementVector.normalized);
+        return movementVector;
     }
 }

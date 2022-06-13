@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class State
 {
-    private int id { set; get; }
-    private string name { set; get; }
-    private Vector2 mousePosition { set; get; }
-    private Vector2 movementVector { set; get; }
-    private int hp { set; get; }
+    public int player_id { set; get; }
+    public ulong mes_id { set; get; }
+    public Vector2 mousePosition { set; get; }
+    public Vector2 movementVector { set; get; }
+    public int hp { set; get; }
+    public bool shoot { set; get; }
 }
