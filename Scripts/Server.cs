@@ -22,6 +22,7 @@ public class Server : MonoBehaviour
     public static Button butt;
     public static bool flag = false;
     public static string[] tanks = { "light", "dark", "red", "green"};
+    public TcpListener serverSocket;
 
     void Awake()
     {
@@ -81,7 +82,7 @@ public class Server : MonoBehaviour
     {
         Debug.Log("Server Started ....");
         IPAddress localAddr = IPAddress.Parse(GetIPAddress());
-        TcpListener serverSocket = new TcpListener(localAddr, 777);
+        serverSocket = new TcpListener(localAddr, 777);
         int counter = 0;
 
         serverSocket.Start();
@@ -95,8 +96,6 @@ public class Server : MonoBehaviour
             sendMessageToTank(tanks[c], "Deus Vult:"+c.ToString());
         }
         flag = true;
-        //clientSocket.Close();
-        //serverSocket.Stop();
     }
 
     IEnumerator Example()
@@ -104,6 +103,16 @@ public class Server : MonoBehaviour
         yield return new WaitUntil(() => flag);
         pText.text = "All " + multiplayerManager.playersNumber.ToString() + " players are connected. We are ready to begin!";
         butt.interactable = true;
+    }
+
+    public void Disconnect()
+    {
+        foreach ( var client in clientsList)
+        {
+            TcpClient tcc = (TcpClient)client;
+            tcc.Close();
+        }
+        serverSocket.Stop();
     }
 
 

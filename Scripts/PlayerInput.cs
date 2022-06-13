@@ -16,48 +16,9 @@ public class PlayerInput : MonoBehaviour
     public UnityEvent OnShoot = new UnityEvent();
     public UnityEvent<Vector2> OnMoveBody = new UnityEvent<Vector2>();
     public UnityEvent<Vector2> OnMoveTurret = new UnityEvent<Vector2>();
-    public Client client;
-    public State currentState;
-    public bool close = true;
-    public ulong mesID = 21;
-
-    private void Awake()
-    {
-        if (mainCamera == null)
-            mainCamera = Camera.main;
-
-        client  = GameObject.FindObjectOfType<Client>();
-    }
 
     private void Start()
     {
-        if (Application.targetFrameRate != 30)
-            Application.targetFrameRate = 30;
-        currentState = new State();
-        currentState.shoot = false;
-        currentState.hp = 50;
-        currentState.player_id = client.id;
-        Debug.Log(client.id);
-        currentState.mes_id = mesID;
-        currentState.mousePosition = GetMousePositon();
-        currentState.movementVector = GetBodyMovement();
-    }
-
-    IEnumerator Playback()
-    {
-        do
-        {
-            currentState.mousePosition = GetMousePositon();
-            currentState.movementVector = GetBodyMovement();
-            mesID++;
-            currentState.player_id = client.id;
-            Debug.Log(client.id);
-            currentState.mes_id = mesID;
-            currentState.shoot = GetShootingInput();
-            client.SendMessageToServer("c:"+JsonConvert.SerializeObject(currentState)+"&\0");
-            //Debug.Log("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
-            yield return new WaitForSeconds(1f / 30f);  
-        } while (close);
     }
 
     public bool GetShootingInput()

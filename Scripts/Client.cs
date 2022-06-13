@@ -86,7 +86,6 @@ public class Client : MonoBehaviour
             currentState.movementVector = playerInput.GetBodyMovement();
             mesID++;
             currentState.player_id = id;
-            Debug.Log(id);
             currentState.mes_id = mesID;
             currentState.shoot = playerInput.GetShootingInput();
             SendMessageToServer("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
@@ -210,7 +209,9 @@ public class Client : MonoBehaviour
                     case 'c':
                     {
                         State state = JsonConvert.DeserializeObject<State>(returnData.Split("&")[0].Substring(2));
+                        mutex.WaitOne();
                         tanksStatesInMatch[state.player_id] = state;
+                        mutex.ReleaseMutex();
                         break;
                     }
                 }
@@ -220,7 +221,9 @@ public class Client : MonoBehaviour
 
     public void Update()
     {
-        foreach(var tank in tanksControllersInMatch)
+        if (Application.targetFrameRate != 30)
+            Application.targetFrameRate = 30;
+        foreach (var tank in tanksControllersInMatch)
         {
             mutex.WaitOne();
             tank.Value.GetBodyMovement(tanksStatesInMatch[tank.Key].movementVector);
