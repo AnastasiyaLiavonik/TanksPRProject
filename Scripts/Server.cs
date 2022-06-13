@@ -73,7 +73,8 @@ public class Server : MonoBehaviour
         {
             toSend += $"{i}-{tanks[i]};";
         }
-        broadcast(toSend, "");
+        broadcast(toSend+'\0', "");
+        broadcast("t:"+(DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3).ToString()+'\0', "");
     }
 
     private void StartServer()
@@ -103,7 +104,6 @@ public class Server : MonoBehaviour
         yield return new WaitUntil(() => flag);
         pText.text = "All " + multiplayerManager.playersNumber.ToString() + " players are connected. We are ready to begin!";
         butt.interactable = true;
-        broadcast((DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3).ToString(), "");
     }
 
 
@@ -119,7 +119,10 @@ public class Server : MonoBehaviour
         IPAddress[] address = ipHostEntry.AddressList;
         sb.Append("The Local IP Address: " + address[1].ToString());
         sb.AppendLine();
-
+        if (address[0].ToString().Contains("192"))
+        {
+            return address[0].ToString();
+        }
         return address[1].ToString();
     }
 

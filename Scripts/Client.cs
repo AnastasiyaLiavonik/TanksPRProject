@@ -32,6 +32,7 @@ public class Client : MonoBehaviour
     private static Dictionary<int, HumanController> tanksControllersInMatch = new Dictionary<int, HumanController>();
     private static Dictionary<int, State> tanksStatesInMatch = new Dictionary<int, State>();
     Mutex mutex = new Mutex();
+    public long startTime = 0;
 
     public Client()
     {
@@ -122,8 +123,12 @@ public class Client : MonoBehaviour
 
     public void SendMessageToServer(string msg)
     {
-        byte[] outStream = Encoding.ASCII.GetBytes(msg);
-        serverStream.Write(outStream, 0, outStream.Length);
+        if(DateTimeOffset.UtcNow.ToUnixTimeSeconds() == startTime)
+        {
+            byte[] outStream = Encoding.ASCII.GetBytes(msg);
+            serverStream.Write(outStream, 0, outStream.Length);
+        }
+        
     }
 
     private void GetMessage()
@@ -159,6 +164,11 @@ public class Client : MonoBehaviour
                 char type = returnData[0];
                 switch (type)
                 {
+                    case 't':
+                        {
+                            startTime = long.Parse(returnData.Split(":")[1]);
+                            break;
+                        }
                     case 'i':
                     {
                         var tanksString = returnData.Substring(2);
