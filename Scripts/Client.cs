@@ -123,7 +123,7 @@ public class Client : MonoBehaviour
 
     public void SendMessageToServer(string msg)
     {
-        if(DateTimeOffset.UtcNow.ToUnixTimeSeconds() == startTime)
+        if(DateTimeOffset.UtcNow.ToUnixTimeSeconds() == startTime || msg.Contains("Ave"))
         {
             byte[] outStream = Encoding.ASCII.GetBytes(msg);
             serverStream.Write(outStream, 0, outStream.Length);
