@@ -52,7 +52,7 @@ public class Server : MonoBehaviour
         pText = GameObject.Find("TextPlayers").GetComponent<TextMeshProUGUI>();
         Thread start = new Thread(StartServer);
         Task.Delay(300).ContinueWith(t => start.Start());
-        Client client = new Client();
+        Client client = FindObjectsOfType<Client>()[0];
         Task.Delay(300).ContinueWith(t => client.Connecta(GetIPAddress()));
     }
 

@@ -15,7 +15,7 @@ class MultiplayerConnect:MonoBehaviour
             return;
         }
         connectionStatus.text = "Connection...";
-        Client client = new Client();
+        Client client = FindObjectsOfType<Client>()[0];
         string resp = IPAddressInputText.text;
         client.Connecta(resp);
     }

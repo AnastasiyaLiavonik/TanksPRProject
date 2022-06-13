@@ -33,15 +33,10 @@ public class Client : MonoBehaviour
     private static Dictionary<int, HumanController> tanksControllersInMatch = new Dictionary<int, HumanController>();
     private static Dictionary<int, State> tanksStatesInMatch = new Dictionary<int, State>();
     Mutex mutex = new Mutex();
-    private State currentState;
+    private State currentState = new State();
     public ulong mesID = 0;
     public long startTime = 0;
-    public bool deletedUnnecessary = false;
-
-    public Client()
-    {
-        
-    }
+    public bool deletedUnnecessary = false; 
 
     void Awake()
     {
@@ -64,7 +59,6 @@ public class Client : MonoBehaviour
         }
         StartCoroutine(Example());
         StartCoroutine(Playback());
-        //SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     public void Connecta(string IP)
@@ -80,6 +74,10 @@ public class Client : MonoBehaviour
 
     IEnumerator Playback()
     {
+        while (SceneManager.GetActiveScene().buildIndex != 3)
+        {
+            yield return null;
+        }
         yield return new WaitUntil(() => deletedUnnecessary);
         while (gameContinues)
         {
@@ -91,7 +89,6 @@ public class Client : MonoBehaviour
             currentState.mes_id = mesID;
             currentState.shoot = playerInput.GetShootingInput();
             SendMessageToServer("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
-            //Debug.Log("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
             yield return new WaitForSeconds(1f / 30f);
         } 
     }
@@ -108,8 +105,7 @@ public class Client : MonoBehaviour
 
         if (SceneManager.GetActiveScene().buildIndex == 3)
         {
-            Debug.Log($"In tank deleting: " +
-                $"{id}");
+            Debug.Log($"In tank deleting:   {id}");
             var enemyTanks = GameObject.FindGameObjectsWithTag("Enemy");
             foreach (var enemy in enemyTanks)
             {
@@ -137,7 +133,9 @@ public class Client : MonoBehaviour
                     Debug.Log(player.name);
                     tanksStatesInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == playerTanksDict.FirstOrDefault(x => x.Value == player.name).Key).Key, new State());
                     tanksControllersInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == playerTanksDict.FirstOrDefault(x => x.Value == player.name).Key).Key, player.transform.GetChild(0).gameObject.GetComponent<HumanController>());
+                    mutex.WaitOne();
                     playerInput = player.GetComponent<PlayerInput>();
+                    mutex.ReleaseMutex();
                     Debug.Log(playerInput);
                 }
             }

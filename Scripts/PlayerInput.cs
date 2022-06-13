@@ -16,10 +16,10 @@ public class PlayerInput : MonoBehaviour
     public UnityEvent OnShoot = new UnityEvent();
     public UnityEvent<Vector2> OnMoveBody = new UnityEvent<Vector2>();
     public UnityEvent<Vector2> OnMoveTurret = new UnityEvent<Vector2>();
-    private Client client;
-    private State currentState;
-    private bool close = true;
-    private ulong mesID = 0;
+    public Client client;
+    public State currentState;
+    public bool close = true;
+    public ulong mesID = 21;
 
     private void Awake()
     {
