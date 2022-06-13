@@ -41,7 +41,6 @@ public class PlayerInput : MonoBehaviour
         currentState.mes_id = mesID;
         currentState.mousePosition = GetMousePositon();
         currentState.movementVector = GetBodyMovement();
-        StartCoroutine(Playback());
     }
 
     IEnumerator Playback()
