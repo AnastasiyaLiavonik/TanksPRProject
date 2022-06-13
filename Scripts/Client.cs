@@ -101,7 +101,7 @@ public class Client : MonoBehaviour
         yield return new WaitUntil(() => loadFlag);
         SceneManager.LoadSceneAsync(3);
 
-        while (SceneManager.GetActiveScene().buildIndex != 3 && !SceneManager.GetActiveScene().isLoaded)
+        while (SceneManager.GetActiveScene().buildIndex != 3)
         {
             yield return null;
         }
