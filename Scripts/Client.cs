@@ -31,11 +31,13 @@ public class Client : MonoBehaviour
     public static bool loadFlag = false;
     public bool gameContinues = true;
     public int id;
+    public GameObject player;
     private Dictionary<string, string> enemyTanksDict = new Dictionary<string, string>();
     private Dictionary<string, string> playerTanksDict = new Dictionary<string, string>();
     private static Dictionary<int, string> tanksInMatch = new Dictionary<int, string>();
     private static Dictionary<int, HumanController> tanksControllersInMatch = new Dictionary<int, HumanController>();
     private static Dictionary<int, State> tanksStatesInMatch = new Dictionary<int, State>();
+    private static Dictionary<int, GameObject> enemies = new Dictionary<int, GameObject>();
     public Mutex mutex = new Mutex();
     private State currentState = new State();
     public ulong mesID = 0;
@@ -94,12 +96,21 @@ public class Client : MonoBehaviour
         yield return new WaitUntil(() => deletedUnnecessary);
         while (gameContinues)
         {
+            Debug.Log(mesID);
             currentState.mousePosition = playerInput.GetMousePositon();
             currentState.movementVector = playerInput.GetBodyMovement();
             mesID++;
             currentState.player_id = id;
             currentState.mes_id = mesID;
             currentState.shoot = playerInput.GetShootingInput();
+            if(mesID%50 == 0)
+            {
+                State2 state = new State2();
+                state.id = id;
+                state.position = player.transform.position;
+                state.rotation = player.transform.rotation;
+                SendMessageToServer("k:"+JsonConvert.SerializeObject(state)+"&\0");
+            }
             SendMessageToServer("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
             yield return new WaitForSeconds(1f / 200f);
         } 
@@ -129,6 +140,7 @@ public class Client : MonoBehaviour
                     tanksStatesInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == enemyTanksDict.FirstOrDefault(x => x.Value == enemy.name).Key).Key, new State());
                     tanksControllersInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == enemyTanksDict.FirstOrDefault(x => x.Value == enemy.name).Key).Key, enemy.GetComponent<HumanController>());
                     enemy.transform.position = positions[enemy.name];
+                    enemies.Add(tanksInMatch.FirstOrDefault(x => x.Value == enemyTanksDict.FirstOrDefault(x => x.Value == enemy.name).Key).Key, enemy);
                 }
             }
 
@@ -144,6 +156,7 @@ public class Client : MonoBehaviour
                     tanksStatesInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == playerTanksDict.FirstOrDefault(x => x.Value == player.name).Key).Key, new State());
                     tanksControllersInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == playerTanksDict.FirstOrDefault(x => x.Value == player.name).Key).Key, player.transform.GetChild(0).gameObject.GetComponent<HumanController>());
                     playerInput = player.GetComponent<PlayerInput>();
+                    this.player = player;
                     var cin = GameObject.Find("PlayerCinemachine").GetComponent<CinemachineVirtualCamera>();
                     cin.Follow = player.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform;
                     player.transform.position = positions[player.name];
@@ -234,6 +247,13 @@ public class Client : MonoBehaviour
                         }
                         break;
                     }
+                    case 'k':
+                        {
+                            State2 state = JsonConvert.DeserializeObject<State2>(returnData.Split("&")[0].Substring(2));
+                            enemies[state.id].transform.position = state.position;
+                            enemies[state.id].transform.rotation = state.rotation;
+                            break;
+                        }
                 }
             }
         }
