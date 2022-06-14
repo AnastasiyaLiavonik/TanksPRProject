@@ -123,7 +123,7 @@ public class Server : MonoBehaviour
                 broadcast(text + "&\0", "");
                 Debug.Log("ret");
             }
-            yield return new WaitForSeconds(1f / 200f);
+            yield return new WaitForSeconds(1f / 150f);
         }
     }
 
