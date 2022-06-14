@@ -12,6 +12,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
 
 public class Server : MonoBehaviour
 {
@@ -20,9 +23,12 @@ public class Server : MonoBehaviour
     public static MultiplayerManager multiplayerManager;
     public static TextMeshProUGUI pText;
     public static Button butt;
+    private static Dictionary<int, State> tanksStatesInMatch = new Dictionary<int, State>();
     public static bool flag = false;
     public static string[] tanks = { "light", "dark", "red", "green"};
     public TcpListener serverSocket;
+    public Mutex mutex = new Mutex();
+    public bool gameContinues = true;
 
     void Awake()
     {
@@ -35,7 +41,6 @@ public class Server : MonoBehaviour
         {
             DontDestroyOnLoad(gameObject);
         }
-        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void OnEnable()
@@ -60,11 +65,6 @@ public class Server : MonoBehaviour
     public void StartBtn()
     {
         SendStartingInfo();
-    }
-
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        
     }
 
     void SendStartingInfo()
@@ -94,8 +94,28 @@ public class Server : MonoBehaviour
             handleClinet client = new handleClinet();
             clientsList.Add(tanks[counter - 1], client.startClient(serverSocket, counter));
             sendMessageToTank(tanks[c], "Deus Vult:"+c.ToString());
+            tanksStatesInMatch.Add(counter-1, new State());
         }
         flag = true;
+    }
+
+    IEnumerator Playback()
+    {
+        while (SceneManager.GetActiveScene().buildIndex != 3)
+        {
+            yield return null;
+        }
+        //yield return new WaitUntil(() => deletedUnnecessary);
+        while (gameContinues)
+        {
+            mutex.WaitOne();
+            foreach (var tankPos in tanksStatesInMatch)
+            {
+                broadcast("c:" + JsonConvert.SerializeObject(tankPos.Value) + "&\0", "");
+            }
+            mutex.ReleaseMutex();
+            yield return new WaitForSeconds(1f / 30f);
+        }
     }
 
     IEnumerator Example()
@@ -162,6 +182,7 @@ public class Server : MonoBehaviour
     {
         TcpClient clientSocket;
         string clNo;
+        public Mutex mutex = new Mutex();
 
         public TcpClient startClient(TcpListener serverSocket, int counter)
         {
@@ -184,6 +205,7 @@ public class Server : MonoBehaviour
             Thread ctThread = new Thread(doChat);
             ctThread.Start();
 
+
             return this.clientSocket;
         }
 
@@ -198,12 +220,18 @@ public class Server : MonoBehaviour
                 {
                     networkStream.Read(bytesFrom, 0, bytesFrom.Length);
                     dataFromClient = System.Text.Encoding.ASCII.GetString(bytesFrom);
-                    broadcast(dataFromClient, "");
+                    State state = JsonConvert.DeserializeObject<State>(dataFromClient.Split("&")[0].Substring(2));
+                    mutex.WaitOne();
+                    tanksStatesInMatch[state.player_id] = state;
+                    mutex.ReleaseMutex();
+
+                    //broadcast(dataFromClient, "");
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.ToString());
                 }
+
             }
         }
     } 

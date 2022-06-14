@@ -3,14 +3,8 @@ using System.Threading;
 using System.Net.Sockets;
 using System.Text;
 using System.Collections;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Text.RegularExpressions;
-using System.Collections.Concurrent;
 using UnityEngine;
-using TMPro;
 using UnityEngine.SceneManagement;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -33,7 +27,7 @@ public class Client : MonoBehaviour
     private static Dictionary<int, string> tanksInMatch = new Dictionary<int, string>();
     private static Dictionary<int, HumanController> tanksControllersInMatch = new Dictionary<int, HumanController>();
     private static Dictionary<int, State> tanksStatesInMatch = new Dictionary<int, State>();
-    Mutex mutex = new Mutex();
+    public Mutex mutex = new Mutex();
     private State currentState = new State();
     public ulong mesID = 0;
     public long startTime = 0;
@@ -89,7 +83,7 @@ public class Client : MonoBehaviour
             currentState.mes_id = mesID;
             currentState.shoot = playerInput.GetShootingInput();
             SendMessageToServer("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
-            yield return new WaitForSeconds(1f / 30f);
+            yield return new WaitForSeconds(1f / 60f);
         } 
     }
 
@@ -135,8 +129,6 @@ public class Client : MonoBehaviour
                     mutex.ReleaseMutex();
                     var cin = GameObject.Find("PlayerCinemachine").GetComponent<CinemachineVirtualCamera>();
                     cin.Follow = player.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform;
-
-
                 }
             }
             deletedUnnecessary = true;
