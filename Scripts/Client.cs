@@ -275,7 +275,7 @@ lock (tanksStatesInMatch)
             }
             
         }
-        if (SceneManager.GetActiveScene().buildIndex == 3)
+        if (SceneManager.GetActiveScene().buildIndex == 0)
         {
             Destroy(this.gameObject);
         }
