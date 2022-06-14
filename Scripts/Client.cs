@@ -83,7 +83,7 @@ public class Client : MonoBehaviour
             currentState.mes_id = mesID;
             currentState.shoot = playerInput.GetShootingInput();
             SendMessageToServer("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
-            yield return new WaitForSeconds(1f / 60f);
+            yield return new WaitForSeconds(1f / 200f);
         } 
     }
 
@@ -124,9 +124,7 @@ public class Client : MonoBehaviour
                 {
                     tanksStatesInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == playerTanksDict.FirstOrDefault(x => x.Value == player.name).Key).Key, new State());
                     tanksControllersInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == playerTanksDict.FirstOrDefault(x => x.Value == player.name).Key).Key, player.transform.GetChild(0).gameObject.GetComponent<HumanController>());
-                    mutex.WaitOne();
                     playerInput = player.GetComponent<PlayerInput>();
-                    mutex.ReleaseMutex();
                     var cin = GameObject.Find("PlayerCinemachine").GetComponent<CinemachineVirtualCamera>();
                     cin.Follow = player.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform;
                 }
@@ -168,15 +166,15 @@ public class Client : MonoBehaviour
             {
                 // register tank
                 Debug.Log("tank added");
-                mutex.WaitOne();
-                id = Int32.Parse(returnData.Split(":")[1]);
-                mutex.ReleaseMutex();
+                lock ((object)id)
+                {
+                    id = Int32.Parse(returnData.Split(":")[1]);
+                }
                 Debug.Log($"Your id is {id}");
                 isConnected = true;
             }
             else if(isConnected)
             {
-                Debug.Log(id);
                 char type = returnData[0];
                 switch (type)
                 {
@@ -201,9 +199,10 @@ public class Client : MonoBehaviour
                     case 'c':
                     {
                         State state = JsonConvert.DeserializeObject<State>(returnData.Split("&")[0].Substring(2));
-                        mutex.WaitOne();
-                        tanksStatesInMatch[state.player_id] = state;
-                        mutex.ReleaseMutex();
+                        lock (tanksStatesInMatch)
+                        {
+                            tanksStatesInMatch[state.player_id] = state;
+                        }
                         break;
                     }
                 }
@@ -213,15 +212,15 @@ public class Client : MonoBehaviour
 
     public void Update()
     {
-        if (Application.targetFrameRate != 30)
-            Application.targetFrameRate = 30;
         foreach (var tank in tanksControllersInMatch)
         {
-            mutex.WaitOne();
-            tank.Value.GetBodyMovement(tanksStatesInMatch[tank.Key].movementVector);
-            tank.Value.GetShootingInput(tanksStatesInMatch[tank.Key].shoot);
-            tank.Value.GetTurretMovement(tanksStatesInMatch[tank.Key].mousePosition);
-            mutex.ReleaseMutex();
+            lock (tanksStatesInMatch)
+            {
+                tank.Value.GetBodyMovement(tanksStatesInMatch[tank.Key].movementVector);
+                tank.Value.GetShootingInput(tanksStatesInMatch[tank.Key].shoot);
+                tank.Value.GetTurretMovement(tanksStatesInMatch[tank.Key].mousePosition);
+            }
+            
         }
     }
 }

@@ -30,7 +30,7 @@ public class PlayerInput : MonoBehaviour
 
     public bool GetShootingInput()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             return true;
         }

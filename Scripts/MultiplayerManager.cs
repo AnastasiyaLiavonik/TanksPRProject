@@ -71,13 +71,13 @@ public class MultiplayerManager : MonoBehaviour
         {
             if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && winScreen != null && GameObject.FindGameObjectsWithTag("Player").Length != 0)
             {
-                foreach(GameObject go in GameObject.FindGameObjectsWithTag("Player"))
-                {
-                    go.SetActive(false);
-                }
-                winScreen.SetActive(true);
-                winFlag = true;
-                Invoke("back", 2.0f);
+                //foreach(GameObject go in GameObject.FindGameObjectsWithTag("Player"))
+                //{
+                //    go.SetActive(false);
+                //}
+                //winScreen.SetActive(true);
+                //winFlag = true;
+                //Invoke("back", 2.0f);
                 
             }
             else if(GameObject.FindGameObjectsWithTag("Player").Length == 0 && defeatScreen != null && GameObject.FindGameObjectsWithTag("Enemy").Length != 0)

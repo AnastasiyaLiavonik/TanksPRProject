@@ -29,6 +29,7 @@ public class Server : MonoBehaviour
     public TcpListener serverSocket;
     public Mutex mutex = new Mutex();
     public bool gameContinues = true;
+    public long startTime = 0;
 
     void Awake()
     {
@@ -75,7 +76,9 @@ public class Server : MonoBehaviour
             toSend += $"{i}-{tanks[i]};";
         }
         broadcast(toSend+'\0', "");
-        broadcast("t:"+(DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3).ToString()+'\0', "");
+        startTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 5;
+        broadcast("t:"+(startTime).ToString()+'\0', "");
+        StartCoroutine(Playback());
     }
 
     private void StartServer()
@@ -105,16 +108,17 @@ public class Server : MonoBehaviour
         {
             yield return null;
         }
-        //yield return new WaitUntil(() => deletedUnnecessary);
+        yield return new WaitUntil(() => DateTimeOffset.UtcNow.ToUnixTimeSeconds() == startTime);
         while (gameContinues)
         {
-            mutex.WaitOne();
-            foreach (var tankPos in tanksStatesInMatch)
+            lock (tanksStatesInMatch)
             {
-                broadcast("c:" + JsonConvert.SerializeObject(tankPos.Value) + "&\0", "");
+                foreach (var tankPos in tanksStatesInMatch.Values)
+                {
+                    broadcast("c:" + JsonConvert.SerializeObject(tankPos) + "&\0", "");
+                }
             }
-            mutex.ReleaseMutex();
-            yield return new WaitForSeconds(1f / 30f);
+            yield return new WaitForSeconds(1f / 200f);
         }
     }
 
@@ -134,8 +138,6 @@ public class Server : MonoBehaviour
         }
         serverSocket.Stop();
     }
-
-
 
     static string GetIPAddress()
     {
@@ -176,7 +178,7 @@ public class Server : MonoBehaviour
             broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
             broadcastStream.Flush();
         }
-    }  //end broadcast function
+    }
 
     public class handleClinet
     {
@@ -221,11 +223,10 @@ public class Server : MonoBehaviour
                     networkStream.Read(bytesFrom, 0, bytesFrom.Length);
                     dataFromClient = System.Text.Encoding.ASCII.GetString(bytesFrom);
                     State state = JsonConvert.DeserializeObject<State>(dataFromClient.Split("&")[0].Substring(2));
-                    mutex.WaitOne();
-                    tanksStatesInMatch[state.player_id] = state;
-                    mutex.ReleaseMutex();
-
-                    //broadcast(dataFromClient, "");
+                    lock (tanksStatesInMatch)
+                    {
+                        tanksStatesInMatch[state.player_id] = state;
+                    }
                 }
                 catch (Exception ex)
                 {
