@@ -177,11 +177,14 @@ public class Server : MonoBehaviour
         {
             TcpClient broadcastSocket;
             broadcastSocket = (TcpClient)Item.Value;
-            NetworkStream broadcastStream = broadcastSocket.GetStream();
-            Byte[] broadcastBytes = null;
-            broadcastBytes = Encoding.ASCII.GetBytes(msg);
-            broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
-            broadcastStream.Flush();
+            if (broadcastSocket.Connected)
+            {
+                NetworkStream broadcastStream = broadcastSocket.GetStream();
+                Byte[] broadcastBytes = null;
+                broadcastBytes = Encoding.ASCII.GetBytes(msg);
+                broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+                broadcastStream.Flush();
+            }
         }
     }
 
