@@ -76,7 +76,7 @@ public class Server : MonoBehaviour
             toSend += $"{i}-{tanks[i]};";
         }
         broadcast(toSend+'\0', "");
-        startTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 5;
+        startTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 2;
         broadcast("t:"+(startTime).ToString()+'\0', "");
         StartCoroutine(Playback());
     }

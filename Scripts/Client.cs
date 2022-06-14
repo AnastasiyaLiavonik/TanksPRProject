@@ -40,7 +40,8 @@ public class Client : MonoBehaviour
     private State currentState = new State();
     public ulong mesID = 0;
     public long startTime = 0;
-    public bool deletedUnnecessary = false; 
+    public bool deletedUnnecessary = false;
+    public Dictionary<string, Vector3> positions = new Dictionary<string, Vector3>();
 
     void Awake()
     {
@@ -52,6 +53,14 @@ public class Client : MonoBehaviour
         playerTanksDict.Add("dark", "PlayerControlledDark");
         playerTanksDict.Add("red", "PlayerControlledRed");
         playerTanksDict.Add("green", "PlayerControlledGreen");
+        positions.Add("PlayerControlledRed", new Vector3(-0.22f, -3.57f, 0.00f));
+        positions.Add("PlayerControlledLight", new Vector3(-5.43f, -3.28f, 0.00f));
+        positions.Add("PlayerControlledDark", new Vector3(-3.93f, -1.10f, 0.00f));
+        positions.Add("PlayerControlledGreen", new Vector3(-1.15f, -1.11f, 0.00f));
+        positions.Add("HumanControlledRed", new Vector3(-0.22f, -3.57f, 0.00f));
+        positions.Add("HumanControlledLight", new Vector3(-5.43f, -3.28f, 0.00f));
+        positions.Add("HumanControlledDark", new Vector3(-3.93f, -1.10f, 0.00f));
+        positions.Add("HumanControlledGreen", new Vector3(-1.15f, -1.11f, 0.00f));
         int clients = FindObjectsOfType<Client>().Length;
         if (clients != 1)
         {
@@ -119,6 +128,7 @@ public class Client : MonoBehaviour
                 {
                     tanksStatesInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == enemyTanksDict.FirstOrDefault(x => x.Value == enemy.name).Key).Key, new State());
                     tanksControllersInMatch.Add(tanksInMatch.FirstOrDefault(x => x.Value == enemyTanksDict.FirstOrDefault(x => x.Value == enemy.name).Key).Key, enemy.GetComponent<HumanController>());
+                    enemy.transform.position = positions[enemy.name];
                 }
             }
 
@@ -136,6 +146,7 @@ public class Client : MonoBehaviour
                     playerInput = player.GetComponent<PlayerInput>();
                     var cin = GameObject.Find("PlayerCinemachine").GetComponent<CinemachineVirtualCamera>();
                     cin.Follow = player.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform;
+                    player.transform.position = positions[player.name];
                 }
             }
             deletedUnnecessary = true;
