@@ -112,7 +112,7 @@ public class Client : MonoBehaviour
                 SendMessageToServer("k:"+JsonConvert.SerializeObject(state)+"&\0");
             }
             SendMessageToServer("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
-            yield return new WaitForSeconds(1f / 150f);
+            yield return new WaitForSeconds(1f / 100f);
         } 
     }
 

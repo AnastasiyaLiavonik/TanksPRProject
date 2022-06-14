@@ -123,7 +123,7 @@ public class Server : MonoBehaviour
                 broadcast(text + "&\0", "");
                 Debug.Log("ret");
             }
-            yield return new WaitForSeconds(1f / 150f);
+            yield return new WaitForSeconds(1f / 100f);
         }
     }
 
@@ -136,11 +136,11 @@ public class Server : MonoBehaviour
 
     public void Disconnect()
     {
-        foreach ( var client in clientsList)
-        {
-            TcpClient tcc = (TcpClient)client;
-            tcc.Close();
-        }
+        //foreach ( var client in clientsList)
+        //{
+        //    TcpClient tcc = (TcpClient)client;
+        //   tcc.Close();
+        //}
         serverSocket.Stop();
     }
 
