@@ -10,6 +10,15 @@ using System.Linq;
 using Newtonsoft.Json;
 using Cinemachine;
 
+public static class Extensions
+{
+    public static T[] SubArray<T>(this T[] array, int offset, int length)
+    {
+        return new ArraySegment<T>(array, offset, length)
+                    .ToArray();
+    }
+}
+
 public class Client : MonoBehaviour
 {
     private static TcpClient clientSocket;
@@ -198,10 +207,19 @@ public class Client : MonoBehaviour
                     }
                     case 'c':
                     {
-                        State state = JsonConvert.DeserializeObject<State>(returnData.Split("&")[0].Substring(2));
+                        string[] a = returnData.Substring(2).Split("&")[0].Split("|");
+                        a = a.SubArray(0,a.Length-1);
+                        if (a.Length != tanksStatesInMatch.Count)
+                        {
+                            throw new Exception("wrong message size");
+                        }
                         lock (tanksStatesInMatch)
                         {
-                            tanksStatesInMatch[state.player_id] = state;
+                            foreach(var tankState in a)
+                            {
+                                State state = JsonConvert.DeserializeObject<State>(tankState);
+                                tanksStatesInMatch[state.player_id] = state;
+                            }
                         }
                         break;
                     }
