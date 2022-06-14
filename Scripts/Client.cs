@@ -252,7 +252,7 @@ public class Client : MonoBehaviour
                             State2 state = JsonConvert.DeserializeObject<State2>(returnData.Split("&")[0].Substring(2));
                             enemies[state.id].transform.position = state.position;
                             enemies[state.id].transform.rotation = state.rotation;
-                            break;
+                            continue;
                         }
                 }
             }
