@@ -233,11 +233,14 @@ public class Client : MonoBehaviour
                     {
                         string[] a = returnData.Substring(2).Split("&")[0].Split("|");
                         a = a.SubArray(0,a.Length-1);
+                            Debug.Log($"{tanksStatesInMatch.Count} {a.Length}");
                         if (a.Length != tanksStatesInMatch.Count)
                         {
-                            throw new Exception("wrong message size");
-                        }
-                        lock (tanksStatesInMatch)
+                            Debug.Log("wrong message size");
+                            }
+                            else
+                            {
+lock (tanksStatesInMatch)
                         {
                             foreach(var tankState in a)
                             {
@@ -245,6 +248,8 @@ public class Client : MonoBehaviour
                                 tanksStatesInMatch[state.player_id] = state;
                             }
                         }
+                            }
+                        
                         break;
                     }
                     case 'k':
