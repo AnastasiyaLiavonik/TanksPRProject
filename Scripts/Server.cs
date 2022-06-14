@@ -113,17 +113,14 @@ public class Server : MonoBehaviour
         {
             lock (tanksStatesInMatch)
             {
-                Debug.Log("beg");
                 string text = "c:";
                 foreach (var tankPos in tanksStatesInMatch.Values)
                 {
                     text += JsonConvert.SerializeObject(tankPos) + "|";
-                    Debug.Log(tankPos.player_id);
                 }
                 broadcast(text + "&\0", "");
-                Debug.Log("ret");
             }
-            yield return new WaitForSeconds(1f / 100f);
+            yield return new WaitForSeconds(1f / 60f);
         }
     }
 

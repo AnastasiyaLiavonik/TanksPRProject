@@ -96,7 +96,10 @@ public class MultiplayerManager : MonoBehaviour
     private void back()
     {
         Server s = GameObject.FindObjectOfType<Server>();
-        s.Disconnect();
+        if(s != null)
+        {
+            s.Disconnect();
+        }
         SceneManager.LoadScene(0);
     }
 

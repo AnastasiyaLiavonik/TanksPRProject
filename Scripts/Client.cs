@@ -96,7 +96,6 @@ public class Client : MonoBehaviour
         yield return new WaitUntil(() => deletedUnnecessary);
         while (gameContinues)
         {
-            Debug.Log(mesID);
             currentState.mousePosition = playerInput.GetMousePositon();
             currentState.movementVector = playerInput.GetBodyMovement();
             mesID++;
@@ -112,7 +111,7 @@ public class Client : MonoBehaviour
                 SendMessageToServer("k:"+JsonConvert.SerializeObject(state)+"&\0");
             }
             SendMessageToServer("c:" + JsonConvert.SerializeObject(currentState) + "&\0");
-            yield return new WaitForSeconds(1f / 100f);
+            yield return new WaitForSeconds(1f / 60f);
         } 
     }
 
