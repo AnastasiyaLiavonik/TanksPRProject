@@ -240,5 +240,13 @@ public class Server : MonoBehaviour
 
             }
         }
-    } 
+    }
+
+    public void Update()
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 3)
+        {
+            Destroy(this.gameObject);
+        }
+    }
 }
